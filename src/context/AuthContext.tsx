@@ -1,36 +1,27 @@
 import { createContext, useContext, useState } from "react";
-import { User } from "../types";
+import type { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
-  login: (role: "admin" | "user") => void;
+  login: (user: User) => void;
   logout: () => void;
+  updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (role: "admin" | "user") => {
-    const mockUser: User = {
-      id: "1",
-      name: role === "admin" ? "Admin User" : "Regular User",
-      email: "demo@email.com",
-      role,
-    };
-
-    setUser(mockUser);
-  };
+  const login = (user: User) => setUser(user);
 
   const logout = () => setUser(null);
 
+  // Used by Profile to update name/email in session after saving
+  const updateUser = (updated: User) => setUser(updated);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
@@ -38,10 +29,6 @@ export const AuthProvider = ({
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
-
+  if (!context) throw new Error("useAuth must be used inside AuthProvider");
   return context;
 };

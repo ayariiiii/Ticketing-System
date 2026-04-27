@@ -63,7 +63,12 @@ export default function AdminLogin() {
       return;
     }
 
-    login("admin");
+    login({
+      id:    match.id,
+      name:  match.name,
+      email: match.email,
+      role:  "admin",
+    });
     navigate("/admin/dashboard");
   };
 

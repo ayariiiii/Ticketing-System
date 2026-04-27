@@ -34,8 +34,12 @@ export default function Login() {
   const handleLogin = async () => {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 700));
-    login("user");
-    // ✅ Public user always goes to /dashboard
+    login({
+      id:    crypto.randomUUID(),
+      name:  "User",
+      email: "",
+      role:  "user",
+    });
     navigate("/dashboard");
   };
 
@@ -201,20 +205,17 @@ export default function Login() {
         >
           <motion.div variants={stagger} initial="hidden" animate="show">
 
-            {/* Logo */}
             <motion.div variants={fadeUp}>
               <div className="lx-logo">
                 <Headphones size={22} strokeWidth={1.75} />
               </div>
             </motion.div>
 
-            {/* Heading */}
             <motion.h1 className="lx-h1" variants={fadeUp}>Helpdesk Portal</motion.h1>
             <motion.p  className="lx-sub" variants={fadeUp}>
               Welcome! Sign in to submit and track your support tickets.
             </motion.p>
 
-            {/* Static user identity card */}
             <motion.div className="lx-user-card" variants={fadeUp}>
               <div className="lx-user-icon">
                 <User size={18} strokeWidth={1.75} />
@@ -227,7 +228,6 @@ export default function Login() {
 
             <hr className="lx-divider" />
 
-            {/* CTA */}
             <motion.div variants={fadeUp}>
               <motion.button
                 className="lx-btn"
@@ -245,7 +245,6 @@ export default function Login() {
               </motion.button>
             </motion.div>
 
-            {/* ✅ Admin link — uses navigate(), not <a href> */}
             <motion.div variants={fadeUp}>
               <button
                 className="lx-admin-link"

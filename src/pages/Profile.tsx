@@ -209,12 +209,12 @@ export default function Profile() {
           background: ${T.surface};
           border: 1px solid ${T.border};
           border-radius: 22px;
-          padding: 2.5rem 2rem 2rem;
+          padding: 2rem 2rem;
           margin-bottom: 1.5rem;
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           align-items: center;
-          text-align: center;
+          gap: 2rem;
           position: relative;
           overflow: hidden;
         }
@@ -227,11 +227,11 @@ export default function Profile() {
           opacity: 0.5;
         }
 
-        /* ── Avatar ── */
+        /* ── Avatar left column ── */
         .pf-avatar-wrap {
           position: relative;
           cursor: pointer;
-          margin-bottom: 1.25rem;
+          flex-shrink: 0;
         }
         .pf-avatar {
           width: 108px;
@@ -275,7 +275,8 @@ export default function Profile() {
         }
         .pf-avatar-wrap:hover .pf-avatar-overlay { opacity: 1; }
 
-        /* ── Hero text ── */
+        /* ── Hero right column ── */
+        .pf-hero-info { flex: 1; min-width: 0; }
         .pf-hero-name {
           font-size: 20px;
           font-weight: 500;
@@ -283,7 +284,7 @@ export default function Profile() {
           margin: 0 0 4px;
           letter-spacing: -0.01em;
         }
-        .pf-hero-email { font-size: 13.5px; color: ${T.textSec}; margin: 0 0 0.875rem; }
+        .pf-hero-email { font-size: 13.5px; color: ${T.textSec}; margin: 0 0 0.75rem; }
         .pf-role-badge {
           display: inline-flex;
           align-items: center;
@@ -294,49 +295,26 @@ export default function Profile() {
           color: ${T.blue};
           font-size: 12px;
           font-weight: 500;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
         }
 
-        /* ── Upload / remove controls ── */
-        .pf-photo-controls {
-          display: flex;
-          align-items: center;
-          gap: 0.625rem;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-        .pf-upload-btn {
-          all: unset;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 0.5rem 1.125rem;
-          border-radius: 10px;
-          background: ${T.accent};
-          color: #0D0F14;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: filter 0.15s;
-        }
-        .pf-upload-btn:hover { filter: brightness(1.08); }
+        /* ── Remove button only ── */
         .pf-remove-btn {
           all: unset;
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 0.5rem 1.125rem;
-          border-radius: 10px;
+          padding: 0.4rem 0.875rem;
+          border-radius: 9px;
           border: 1px solid ${T.border};
           font-family: 'DM Sans', sans-serif;
-          font-size: 13px;
+          font-size: 12.5px;
           color: ${T.textSec};
           cursor: pointer;
           transition: all 0.15s;
         }
         .pf-remove-btn:hover { border-color: ${T.red}; color: ${T.red}; background: ${T.redDim}; }
-        .pf-photo-hint { font-size: 11.5px; color: ${T.textMuted}; margin: 0.625rem 0 0; }
+        .pf-photo-hint { font-size: 11.5px; color: ${T.textMuted}; margin: 0.5rem 0 0; }
         .pf-photo-err  { font-size: 12px; color: ${T.red}; margin: 0.5rem 0 0; }
 
         /* ── Two-column grid ── */
@@ -517,7 +495,7 @@ export default function Profile() {
               onChange={handleAvatarUpload}
             />
 
-            {/* Big centered avatar */}
+            {/* Avatar — left side, click to change */}
             <div className="pf-avatar-wrap" onClick={() => fileInputRef.current?.click()}>
               {avatar
                 ? <img src={avatar} alt="Profile" className="pf-avatar-img" />
@@ -529,32 +507,26 @@ export default function Profile() {
               </div>
             </div>
 
-            <p className="pf-hero-name">{displayName}</p>
-            <p className="pf-hero-email">{displayEmail}</p>
-            <span className="pf-role-badge">
-              <ShieldCheck size={12} strokeWidth={2} />
-              Administrator
-            </span>
+            {/* Info — right side */}
+            <div className="pf-hero-info">
+              <p className="pf-hero-name">{displayName}</p>
+              <p className="pf-hero-email">{displayEmail}</p>
+              <div>
+                <span className="pf-role-badge">
+                  <ShieldCheck size={12} strokeWidth={2} />
+                  Administrator
+                </span>
+              </div>
 
-            {/* Upload / remove buttons */}
-            <div className="pf-photo-controls">
-              <button className="pf-upload-btn" type="button"
-                onClick={() => fileInputRef.current?.click()}>
-                <ImageIcon size={13} strokeWidth={2} />
-                {avatar ? "Change Photo" : "Upload Photo"}
-              </button>
               {avatar && (
-                <button className="pf-remove-btn" type="button" onClick={handleAvatarRemove}>
-                  <Trash2 size={13} strokeWidth={2} />
-                  Remove
+                <button className="pf-remove-btn" type="button" onClick={handleAvatarRemove}
+                  style={{ marginTop: "0.75rem" }}>
+                  <Trash2 size={12} strokeWidth={2} />
+                  Remove Photo
                 </button>
               )}
-            </div>
 
-            {avatarError
-              ? <p className="pf-photo-err">{avatarError}</p>
-              : <p className="pf-photo-hint">JPG, PNG, GIF, WebP · Max 5 MB</p>
-            }
+            </div>
           </motion.div>
 
           {/* ── Two-column grid ── */}

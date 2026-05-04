@@ -63,17 +63,17 @@ type Role   = "admin" | "user";
 type Status = "active" | "inactive";
 
 interface AppUser {
-  id:       string;
-  name:     string;
-  email:    string;
-  role:     Role;
-  status:   Status;
+  id:     string;
+  name:   string;
+  email:  string;
+  role:   Role;
+  status: Status;
 }
 
 interface NotifSettings {
-  emailEnabled:    boolean;
+  emailEnabled:      boolean;
   highPriorityAlert: boolean;
-  autoReply:       string;
+  autoReply:         string;
 }
 
 interface SystemSettings {
@@ -85,15 +85,15 @@ interface SystemSettings {
 
 interface SecuritySettings {
   minPasswordLength: number;
-  sessionTimeout:    number; // minutes, 0 = never
+  sessionTimeout:    number;
 }
 
 // ─── Tabs config ──────────────────────────────────────────────────────────────
 const TABS = [
-  { id: "users",   label: "Users & Roles",  Icon: Users    },
-  { id: "notifs",  label: "Notifications",  Icon: Bell     },
-  { id: "system",  label: "System",         Icon: Settings },
-  { id: "security",label: "Security",       Icon: Shield   },
+  { id: "users",    label: "Users & Roles", Icon: Users    },
+  { id: "notifs",   label: "Notifications", Icon: Bell     },
+  { id: "system",   label: "System",        Icon: Settings },
+  { id: "security", label: "Security",      Icon: Shield   },
 ] as const;
 
 type TabId = typeof TABS[number]["id"];
@@ -249,7 +249,6 @@ export default function SettingsPage() {
           max-width: 860px;
         }
 
-        /* ── Page header ── */
         .st-h1 {
           font-family: 'Playfair Display', serif;
           font-size: 28px; font-weight: 700;
@@ -403,15 +402,12 @@ export default function SettingsPage() {
         }
         .st-toggle.on::after { transform: translateX(18px); }
 
-        /* ── User table ── */
+        /* ── User list ── */
         .st-user-header {
           display: flex; align-items: center;
           justify-content: space-between; margin-bottom: 1rem;
         }
-        .st-user-count {
-          font-size: 12px; color: ${T.textMuted};
-          letter-spacing: 0.04em;
-        }
+        .st-user-count { font-size: 12px; color: ${T.textMuted}; letter-spacing: 0.04em; }
 
         .st-user-list { display: flex; flex-direction: column; gap: 0.5rem; }
         .st-user-row {
@@ -473,9 +469,7 @@ export default function SettingsPage() {
         }
 
         /* ── Number input ── */
-        .st-number-row {
-          display: flex; align-items: center; gap: 0.625rem;
-        }
+        .st-number-row { display: flex; align-items: center; gap: 0.625rem; }
         .st-number {
           all: unset;
           width: 80px; padding: 0.65rem 0.875rem;
@@ -610,8 +604,8 @@ export default function SettingsPage() {
                     <div className="st-user-list">
                       <AnimatePresence initial={false}>
                         {users.map((u) => {
-                          const isActive = u.status === "active";
-                          const roleColor = u.role === "admin" ? T.blue : T.accent;
+                          const isActive  = u.status === "active";
+                          const roleColor = u.role === "admin" ? T.blue   : T.accent;
                           const roleDim   = u.role === "admin" ? T.blueDim : T.accentDim;
                           return (
                             <motion.div
@@ -630,13 +624,11 @@ export default function SettingsPage() {
                                 <p className="st-user-email">{u.email}</p>
                               </div>
 
-                              {/* Role badge */}
                               <span className="st-badge"
                                 style={{ background: roleDim, color: roleColor }}>
                                 {u.role}
                               </span>
 
-                              {/* Status badge */}
                               <span className="st-badge" style={{
                                 background: isActive ? T.greenDim : T.border,
                                 color:      isActive ? T.green    : T.textMuted,
@@ -644,7 +636,6 @@ export default function SettingsPage() {
                                 {isActive ? "Active" : "Inactive"}
                               </span>
 
-                              {/* Actions */}
                               <div className="st-user-actions">
                                 <button className="st-icon-btn" onClick={() => openEditUser(u)} title="Edit">
                                   <UserCog size={14} strokeWidth={1.75} />
@@ -677,7 +668,6 @@ export default function SettingsPage() {
                     <Bell size={15} strokeWidth={1.75} /> Notifications
                   </p>
 
-                  {/* Toggles */}
                   <div className="st-toggle-row">
                     <div className="st-toggle-info">
                       <p className="st-toggle-label">Email Notifications</p>
@@ -705,7 +695,6 @@ export default function SettingsPage() {
                     />
                   </div>
 
-                  {/* Auto-reply */}
                   <div className="st-field">
                     <label className="st-label">Auto-Reply Message</label>
                     <p className="st-hint">Sent automatically when a user submits a ticket</p>
@@ -792,7 +781,6 @@ export default function SettingsPage() {
                     <Lock size={15} strokeWidth={1.75} /> Security
                   </p>
 
-                  {/* Min password length */}
                   <div className="st-field" style={{ marginBottom: "1.5rem" }}>
                     <label className="st-label">Minimum Password Length</label>
                     <p className="st-hint">Applies to all user accounts. Minimum allowed value is 4.</p>
@@ -807,7 +795,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  {/* Session timeout */}
                   <div className="st-field">
                     <label className="st-label">Session Timeout</label>
                     <p className="st-hint">Automatically log out inactive users. Set to 0 to disable.</p>
@@ -835,7 +822,6 @@ export default function SettingsPage() {
 
           </AnimatePresence>
 
-          {/* Bottom padding */}
           <div style={{ height: "2rem" }} />
         </motion.div>
       </div>

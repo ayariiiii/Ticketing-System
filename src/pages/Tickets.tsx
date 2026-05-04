@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../context/AuthContext";
+import { NotificationController } from "../controllers/NotificationController";
 import { TicketController } from "../controllers/TicketController";
 import type { Department, Priority, TicketStatus, Ticket as TicketType } from "../types";
 
@@ -27,19 +28,11 @@ const T = {
   border:       "#252932",
   accent:       "#E8A838",
   accentDim:    "rgba(232,168,56,0.12)",
+  accentGlow:   "rgba(232,168,56,0.22)",
   textPrimary:  "#F0EDE6",
   textSec:      "#7A8194",
   textMuted:    "#454B5C",
-  green:        "#3DD68C",
-  greenDim:     "rgba(61,214,140,0.12)",
-  blue:         "#5B9CF6",
-  blueDim:      "rgba(91,156,246,0.12)",
-  red:          "#E85656",
-  redDim:       "rgba(232,86,86,0.12)",
-  yellow:       "#E8A838",
-  yellowDim:    "rgba(232,168,56,0.12)",
 };
-
 // ─── Constants ────────────────────────────────────────────────────────────────
 const DEPARTMENTS: Department[] = ["IT Support", "Hardware", "Network", "Software", "HR", "Other"];
 
@@ -147,6 +140,11 @@ function TicketRow({
 
   const handleStatusChange = (status: TicketStatus) => {
     TicketController.update({ ...ticket, status });
+    // Notify the user who submitted the ticket
+    NotificationController.add("user", {
+      message:  `Your ticket ${ticket.id} status updated to "${STATUS_CFG[status].label}"`,
+      ticketId: ticket.id,
+    });
     onUpdate();
   };
 

@@ -11,32 +11,25 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { NotificationController } from "../controllers/NotificationController";
 import { TicketController } from "../controllers/TicketController";
 import type { Priority, TicketStatus } from "../types";
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
-const T = {
-  bg:          "#0D0F14",
-  surface:     "#13161D",
-  surfaceHover:"#1A1E27",
-  border:      "#252932",
-  accent:      "#E8A838",
-  accentDim:   "rgba(232,168,56,0.12)",
-  accentGlow:  "rgba(232,168,56,0.18)",
-  textPrimary: "#F0EDE6",
-  textSec:     "#7A8194",
-  textMuted:   "#454B5C",
-  green:       "#3DD68C",
-  greenDim:    "rgba(61,214,140,0.12)",
-  blue:        "#5B9CF6",
-  blueDim:     "rgba(91,156,246,0.12)",
-  red:         "#E85656",
-  redDim:      "rgba(232,86,86,0.12)",
-  yellow:      "#E8A838",
-  yellowDim:   "rgba(232,168,56,0.12)",
-};
 
 const CATEGORIES = ["IT Support", "Hardware", "Network", "Software", "HR", "Other"] as const;
+const T = {
+  bg:           "#0D0F14",
+  surface:      "#13161D",
+  surfaceHover: "#1A1E27",
+  border:       "#252932",
+  accent:       "#E8A838",
+  accentDim:    "rgba(232,168,56,0.12)",
+  accentGlow:   "rgba(232,168,56,0.22)",
+  textPrimary:  "#F0EDE6",
+  textSec:      "#7A8194",
+  textMuted:    "#454B5C",
+};
 
 // ─── Status config ────────────────────────────────────────────────────────────
 const STATUS_CFG: Record<TicketStatus, { label: string; color: string; dim: string; Icon: React.ElementType }> = {
@@ -98,6 +91,20 @@ export default function UserDashboard() {
     };
 
     TicketController.create(newTicket);
+
+    // Notify admin of new ticket
+    NotificationController.add("admin", {
+      message:  `New ticket submitted: ${newTicket.subject}`,
+      ticketId: newTicket.id,
+    });
+
+    // If high priority, add a separate alert for admin
+    if (newTicket.priority === "high") {
+      NotificationController.add("admin", {
+        message:  `High priority ticket submitted: ${newTicket.subject}`,
+        ticketId: newTicket.id,
+      });
+    }
 
     // Reload from localStorage so the list is in sync
     setTickets(TicketController.getAll());
